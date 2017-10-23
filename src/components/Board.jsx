@@ -1,44 +1,44 @@
 import React from 'react';
 import Square from './Square';
 
-class Board extends React.Component {
-  renderSquare(i) {
-    return (
-      <Square
-        key={i}
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-      />
-    );
-  }
+function renderSquare(i, value, onClick) {
+  return (
+    <Square
+      key={i}
+      value={value}
+      onClick={() => onClick(i)}
+    />
+  );
+}
 
-  renderBoard() {
-    let rows = this.props.squares.reduce((acc, item, idx) => {
-      let group = acc.pop();
-      if (3 === group.length) {
-        acc.push(group);
-        group = [];
-      }
-      group.push(idx);
+function renderBoard(squares, onClick) {
+  let rows = squares.reduce((acc, item, idx) => {
+    let group = acc.pop();
+    if (3 === group.length) {
       acc.push(group);
-      return acc;
-    }, [[]]);
+      group = [];
+    }
+    group.push(idx);
+    acc.push(group);
+    return acc;
+  }, [[]]);
 
-    return rows.map((item) => {
-      return (
-        <div className="board-row">
-          {item.map(x => {
-            return this.renderSquare(x);
-          })}
-        </div>
-      );
-    });
-  }
+  return rows.map((item) => {
+    return (
+      <div className="board-row">
+        {item.map(x => {
+          return renderSquare(x, squares[x], onClick);
+        })}
+      </div>
+    );
+  });
+}
 
+class Board extends React.Component {
   render() {
     return (
       <div>
-        {this.renderBoard()}
+        {renderBoard(this.props.squares, this.props.onClick)}
       </div>
     );
   }
